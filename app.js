@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
+ const fs = require('fs');
+ const generatePage = require('./src/page-template');
 const promptUser = () => {
    return inquirer.prompt([
     {
@@ -47,11 +47,6 @@ const promptUser = () => {
         }
       }
     },
-    {
-      type: 'input',
-      name: 'about',
-      message: 'Provide some information about yourself:'
-    }
   ]);
 };
 
@@ -71,7 +66,15 @@ if (!portfolioData.projects) {
     {
       type: 'input',
       name: 'name',
-      message: 'What is the name of your project?'
+      message: 'What is the name of your project? (Required)',
+      validate: nameInput => {
+        if (nameInput) {
+          return true;
+        } else {
+          console.log('You need to enter a project name!');
+          return false;
+        }
+      }
     },
     {
       type: 'input',
@@ -118,18 +121,7 @@ if (!portfolioData.projects) {
       default: false
     }
   ])
-// };
-//    promptUser()
-//   .then(promptProject)
-//   .then(projectAnswers => console.log(projectAnswers))
-//   .then(projectData => {
-//     portfolioData.projects.push(projectData);
-//     if (projectData.confirmAddProject) {
-//       return promptProject(portfolioData);
-//     } else {
-//       return portfolioData;
-//     }
-//   });
+
   
 .then(projectData => {
   portfolioData.projects.push(projectData);
@@ -145,21 +137,13 @@ promptUser()
 .then(promptProject)
 .then(portfolioData => {
 console.log(portfolioData);
+const pageHTML = generatePage(portfolioData);
+
+    // fs.writeFile('./index.html', pageHTML, err => {
+    //   if (err) throw new Error(err);
+
+    //   console.log('Page created! Check out index.html in this directory to see it!');
+    // });
 });
 
-  
-// // const profileDataArgs = process.argv.slice(2);
 
-// // console.log(profileDataArgs);
-
-// // const [name, github] = profileDataArgs;
-
-// // console.log(name, github);
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//   if (err) throw err;
-
-//   console.log('Portfolio complete! Check out index.html to see the output!');
-// });
